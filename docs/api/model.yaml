@@ -1,0 +1,99 @@
+openapi: 3.1.0
+info:
+  title: OpenAI-compatible 模型服务出站契约
+  version: 1.0.0
+  description: >-
+    业务层只依赖单一 ModelGateway；基地址取自 MODEL_BASE_URL，密钥取自 MODEL_API_KEY，
+    模型名 / 超时 / 重试 / 温度取自 RuntimeConfig。响应须通过结构化 schema 校验与规则闸门，
+    模型不可达时降级为规则粗分级并停在当前步，不推进、不回写、不销号。
+servers:
+  - url: ${MODEL_BASE_URL}
+    description: 院内自建端点或云服务（环境变量 MODEL_BASE_URL）
+security:
+  - bearerAuth: []
+paths:
+  /v1/chat/completions:
+    post:
+      operationId: chatCompletions
+      summary: 要素抽取 / 分级建议 / 措施与通知草稿
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer $MODEL_API_KEY
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatCompletionRequest'
+      responses:
+        '200':
+          description: 结构化模型返回
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatCompletionResponse'
+        '401':
+          description: 未授权（不可重试）
+        '429':
+          description: 限流（可退避重试）
+        '5XX':
+          description: 服务端错误（可退避重试）
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 密钥取自环境变量 MODEL_API_KEY
+  schemas:
+    ChatCompletionRequest:
+      type: object
+      required: [model, messages, temperature, response_format]
+      properties:
+        model:
+          type: string
+          description: 取自 MODEL_NAME
+        messages:
+          type: array
+          items:
+            type: object
+            required: [role, content]
+            properties:
+              role:
+                type: string
+              content:
+                type: string
+        temperature:
+          type: number
+          minimum: 0
+          maximum: 2
+        response_format:
+          type: object
+          description: json_schema 结构化输出
+    ChatCompletionResponse:
+      type: object
+      required: [choices, usage]
+      properties:
+        choices:
+          type: array
+          items:
+            type: object
+            required: [message]
+            properties:
+              message:
+                type: object
+                required: [content]
+                properties:
+                  content:
+                    type: string
+        usage:
+          type: object
+          required: [prompt_tokens, completion_tokens]
+          properties:
+            prompt_tokens:
+              type: integer
+            completion_tokens:
+              type: integer

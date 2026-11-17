@@ -1,0 +1,43 @@
+{
+  "name": "nursing-defect-remediation",
+  "version": "0.1.0",
+  "private": true,
+  "description": "护理缺陷整改闭环系统 —— 接管护理不良事件上报「之后」的处置段",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "dist/main/index.js",
+  "scripts": {
+    "dev": "tsx src/cli.ts dev",
+    "build": "tsc -p tsconfig.json && electron-builder --dir",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:regression": "vitest run tests/runtime/regression.test.ts",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "doctor": "tsx src/cli.ts doctor",
+    "replay": "tsx scripts/replay-scale.ts",
+    "replay:baseline": "tsx scripts/replay-baseline.ts",
+    "stress": "tsx scripts/stress-race.ts",
+    "export": "tsx src/cli.ts export",
+    "slice": "tsx scripts/slice.ts",
+    "fetch-data": "tsx scripts/fetch-public-data.ts",
+    "generate": "tsx scripts/generate-incidents.ts",
+    "validate-fixtures": "tsx scripts/validate-fixtures.ts",
+    "check-contract": "tsx scripts/check-contract.ts",
+    "capture": "tsx scripts/capture-screenshots.ts",
+    "verify": "tsx scripts/verify.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3",
+    "js-yaml": "^4.1.0",
+    "tsx": "^4.16.2",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0"
+  }
+}

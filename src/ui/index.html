@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>护理缺陷整改闭环系统</title>
+  <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ndr-app">
+    <nav class="ndr-nav" aria-label="主导航">
+      <div class="ndr-nav__logo" title="护理缺陷整改闭环">护</div>
+      <button class="ndr-nav__item is-active" type="button" aria-label="在办工作台" title="在办工作台">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </button>
+      <button class="ndr-nav__item" type="button" aria-label="超期清单" title="超期清单">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      </button>
+      <button class="ndr-nav__item" type="button" aria-label="整改台账" title="整改台账">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 9h16M4 14h16M9 4v16"/></svg>
+      </button>
+      <button class="ndr-nav__item" type="button" aria-label="运行摘要" title="运行摘要">
+        <svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>
+      </button>
+    </nav>
+
+    <main class="ndr-main">
+      <header class="ndr-header">
+        <div class="ndr-header__title">
+          <h1 class="ndr-page-title">护理缺陷整改闭环</h1>
+          <div class="ndr-caption">上报到达即接住 · 等人不丢 · 销号有回执</div>
+        </div>
+        <div class="ndr-header__metrics">
+          <div class="ndr-metric"><div class="ndr-metric__value" id="metric-open">0</div><div class="ndr-metric__label">在办</div></div>
+          <div class="ndr-metric"><div class="ndr-metric__value" id="metric-overdue">0</div><div class="ndr-metric__label">超期</div></div>
+        </div>
+        <div class="ndr-header__actions">
+          <button class="ndr-btn ndr-btn--primary" id="btn-sweep" type="button">立即巡检</button>
+          <button class="ndr-btn" id="btn-export" type="button">导出台账</button>
+          <button class="ndr-btn ndr-drawer-toggle" id="btn-drawer" type="button">确认与回写</button>
+        </div>
+      </header>
+
+      <div class="ndr-credentials-banner" id="credentials-banner" role="alert"></div>
+
+      <section class="ndr-workbench">
+        <div class="ndr-panel ndr-panel--list">
+          <div class="ndr-panel__head">
+            <h2 class="ndr-section-title">在办列表</h2>
+            <span class="ndr-caption" id="list-count">—</span>
+          </div>
+          <div class="ndr-filters">
+            <select class="ndr-select" id="filter-ward" aria-label="按病区筛选"><option value="">全部病区</option></select>
+            <select class="ndr-select" id="filter-overdue" aria-label="按超期筛选">
+              <option value="">全部状态</option><option value="yes">仅超期</option>
+            </select>
+            <input class="ndr-input" id="filter-dwell" type="number" min="0" placeholder="停留≥分钟" aria-label="最短停留时长" style="width:100px" />
+          </div>
+          <div class="ndr-tabs" id="tabs" role="tablist"></div>
+          <div class="ndr-panel__body" id="list-body"></div>
+          <div class="ndr-panel__foot ndr-caption" id="list-pager"></div>
+        </div>
+
+        <div class="ndr-panel ndr-panel--timeline">
+          <div class="ndr-panel__head">
+            <h2 class="ndr-section-title">步骤时间线</h2>
+            <span class="ndr-caption" id="timeline-subtitle">选中一件查看</span>
+          </div>
+          <div class="ndr-panel__body" id="timeline-body"></div>
+        </div>
+
+        <div class="ndr-panel ndr-panel--confirm">
+          <div class="ndr-panel__head">
+            <h2 class="ndr-section-title">确认与回写</h2>
+            <span class="ndr-tag ndr-tag--brand" id="confirm-progress">0 / 4</span>
+          </div>
+          <div class="ndr-panel__body" id="confirm-body"></div>
+        </div>
+      </section>
+
+      <footer class="ndr-footer" id="footer-summary">
+        <span>巡检 <strong id="sum-sweeps">0</strong> 次</span>
+        <span>重试 <strong id="sum-retries">0</strong> 次</span>
+        <span>模型调用 <strong id="sum-model">0</strong> 次</span>
+        <span>估算成本 <strong id="sum-cost">未配置单价</strong></span>
+        <span class="ndr-footer__spacer"></span>
+        <span id="sum-clock">60 秒增量轮询</span>
+      </footer>
+    </main>
+  </div>
+
+  <aside class="ndr-drawer" id="drawer" aria-label="确认与回写抽屉">
+    <div class="ndr-drawer__head">
+      <h2 class="ndr-section-title">确认与回写</h2>
+      <button class="ndr-btn" id="btn-drawer-close" type="button">关闭</button>
+    </div>
+    <div class="ndr-panel__body" id="drawer-body"></div>
+  </aside>
+
+  <div class="ndr-toasts" id="toasts" aria-live="polite"></div>
+  <script type="module" src="renderer.js"></script>
+</body>
+</html>

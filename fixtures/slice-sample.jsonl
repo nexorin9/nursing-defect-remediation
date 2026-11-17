@@ -1,0 +1,2 @@
+{"incident_id":"INC-2026-0001","reported_at":"2026-11-09T01:12:00.000Z","ward_code":"内科三病区","shift_code":"白班","narrative":"交接班时发现本班次翻身计划执行记录缺项，已按流程补记并上报。","reporter_role":"责任护士","severity_hint":"一般","encounter_id":"ENC-2026-8801"}
+{"incident_id":"INC-2026-0002","reported_at":"2026-11-09T02:03:00.000Z","ward_code":"骨科二病区","shift_code":"小夜班","narrative":"患者夜间下床时发生滑倒，值班人员立即处置并通知医师，无患者可识别信息记录于此。","reporter_role":"护理组长"}

@@ -1,0 +1,28 @@
+# 依赖与构建产物
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# 运行时数据（数据库、日志、导出件、原始数据）
+data/
+app-data/
+logs/
+*.log
+
+# 密钥与本地环境
+.env
+.env.*
+!.env.example
+
+# 缓存
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+.vite/
+
+# round 元数据（不属于项目）
+score.json

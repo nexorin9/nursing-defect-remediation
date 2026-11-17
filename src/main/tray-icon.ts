@@ -1,0 +1,3 @@
+/** 托盘图标：自绘 32x32 PNG（品牌蓝圆角方块 + 白色十字），不依赖系统主题。 */
+export const TRAY_ICON_DATA_URL =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAtElEQVR4nO2XQQqEMAxF46dH0LXecDyK3lDXegeHGSiItLYkNUHoA6GQmhfTViiRMU0s0H+2o6Ronbugq3lanCoEmvKQA5rykAtkDLS/3uOdkCRZpvb/SIBEHhqrFVAKFMtUC3jrErjUhNwdHps3jDu/A4vwjOfkABmDu2CqfTmkcjhugmtrucWCjEEtgOoSMDnveslxdew3C/0ncHdpeBLvBBkDP9DswtmFWEBD/sP8cmrOF8jEPcQeOY9RAAAAAElFTkSuQmCC";

@@ -1,0 +1,70 @@
+openapi: 3.1.0
+info:
+  title: 电子病历护理记录读取接口
+  version: 1.0.0
+  description: >-
+    读取护理记录原文作为缺陷叙述的旁证。基地址取自 EMR_BASE_URL，令牌取自 EMR_API_TOKEN。
+    encounter_id 缺失时客户端不发起本请求，直接把该件列入「待补住院号」清单。
+servers:
+  - url: ${EMR_BASE_URL}
+    description: 院内电子病历系统地址（环境变量 EMR_BASE_URL）
+security:
+  - bearerAuth: []
+paths:
+  /api/v1/nursing-records:
+    get:
+      operationId: getNursingRecords
+      summary: 按住院号读取护理记录
+      parameters:
+        - name: encounter_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 100
+      responses:
+        '200':
+          description: 护理记录
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NursingRecord'
+        '401':
+          description: 令牌无效（不可重试）
+        '5XX':
+          description: 服务端错误（可退避重试）
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 令牌取自环境变量 EMR_API_TOKEN
+  schemas:
+    NursingRecord:
+      type: object
+      required: [encounter_id, records]
+      properties:
+        encounter_id:
+          type: string
+        records:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecordItem'
+    RecordItem:
+      type: object
+      required: [time, text, author_role]
+      properties:
+        time:
+          type: string
+          format: date-time
+        text:
+          type: string
+        author_role:
+          type: string

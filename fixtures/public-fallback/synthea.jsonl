@@ -1,0 +1,12 @@
+{"event_id":"SYN-EVT-0001","reported_at":"2026-11-01T00:00:00.000Z","kind":"vital_sign","note":"Synthea CSV 事件流骨架 · 仅用于联通校验"}
+{"event_id":"SYN-EVT-0002","reported_at":"2026-11-01T00:01:30.000Z","kind":"observation","note":"Synthea CSV 事件流骨架 · 仅用于联通校验"}
+{"event_id":"SYN-EVT-0003","reported_at":"2026-11-01T00:03:00.000Z","kind":"medication","note":"Synthea CSV 事件流骨架 · 仅用于联通校验"}
+{"event_id":"SYN-EVT-0004","reported_at":"2026-11-01T00:04:30.000Z","kind":"procedure","note":"Synthea CSV 事件流骨架 · 仅用于联通校验"}
+{"event_id":"SYN-EVT-0005","reported_at":"2026-11-01T00:06:00.000Z","kind":"handover","note":"Synthea CSV 事件流骨架 · 仅用于联通校验"}
+{"event_id":"SYN-EVT-0006","reported_at":"2026-11-01T00:07:30.000Z","kind":"vital_sign","note":"Synthea CSV 事件流骨架 · 仅用于联通校验"}
+{"event_id":"SYN-EVT-0007","reported_at":"2026-11-01T00:09:00.000Z","kind":"observation","note":"Synthea CSV 事件流骨架 · 仅用于联通校验"}
+{"event_id":"SYN-EVT-0008","reported_at":"2026-11-01T00:10:30.000Z","kind":"medication","note":"Synthea CSV 事件流骨架 · 仅用于联通校验"}
+{"event_id":"SYN-EVT-0009","reported_at":"2026-11-01T00:12:00.000Z","kind":"procedure","note":"Synthea CSV 事件流骨架 · 仅用于联通校验"}
+{"event_id":"SYN-EVT-0010","reported_at":"2026-11-01T00:13:30.000Z","kind":"handover","note":"Synthea CSV 事件流骨架 · 仅用于联通校验"}
+{"event_id":"SYN-EVT-0011","reported_at":"2026-11-01T00:15:00.000Z","kind":"vital_sign","note":"Synthea CSV 事件流骨架 · 仅用于联通校验"}
+{"event_id":"SYN-EVT-0012","reported_at":"2026-11-01T00:16:30.000Z","kind":"observation","note":"Synthea CSV 事件流骨架 · 仅用于联通校验"}

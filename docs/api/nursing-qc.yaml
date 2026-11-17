@@ -1,0 +1,171 @@
+openapi: 3.1.0
+info:
+  title: 护理质控上报读取与整改结论回写接口
+  version: 1.0.0
+  description: >-
+    护理缺陷整改闭环系统入站读取新上报、出站回写销号结论的正式对接契约。
+    基地址取自环境变量 NURSING_QC_BASE_URL，令牌取自 NURSING_QC_TOKEN；
+    契约文件供信息科核对，替身只存在于 tests/ 层，不是最终对接方式。
+servers:
+  - url: ${NURSING_QC_BASE_URL}
+    description: 院内护理质控系统地址（环境变量 NURSING_QC_BASE_URL）
+security:
+  - bearerAuth: []
+paths:
+  /api/v1/nursing-incidents:
+    get:
+      operationId: listIncidents
+      summary: 分页读取护理缺陷上报单
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [new, in_progress, closed]
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 50
+        - name: since
+          in: query
+          required: false
+          description: 按 reported_at 水位增量拉取
+          schema:
+            type: string
+            format: date-time
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 上报单列表
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, next_cursor]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IncidentReport'
+                  next_cursor:
+                    type: string
+                    nullable: true
+        '401':
+          description: 令牌无效（不可重试）
+        '5XX':
+          description: 服务端错误（可退避重试）
+  /api/v1/nursing-incidents/{incident_id}/review:
+    post:
+      operationId: submitReview
+      summary: 回写整改销号结论
+      parameters:
+        - name: incident_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: idempotency-key
+          in: header
+          required: true
+          description: sha256(incident_id|review|revision)，保证恰好一次回写
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer $NURSING_QC_TOKEN
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewPayload'
+      responses:
+        '200':
+          description: 回写成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '409':
+          description: revision 乐观并发冲突，提示人工处理，不静默重试
+        '4XX':
+          description: 请求错误（不可重试）
+        '5XX':
+          description: 服务端错误（可退避重试）
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 令牌取自环境变量 NURSING_QC_TOKEN
+  schemas:
+    IncidentReport:
+      type: object
+      required: [incident_id, reported_at, ward_code, shift_code, narrative, reporter_role]
+      properties:
+        incident_id:
+          type: string
+          description: 必填且唯一，处置单主键
+        reported_at:
+          type: string
+          format: date-time
+        ward_code:
+          type: string
+        shift_code:
+          type: string
+          enum: [白班, 小夜班, 大夜班]
+        narrative:
+          type: string
+          description: 自由叙述，入窗前须脱敏
+        reporter_role:
+          type: string
+          enum: [责任护士, 护理组长, 护士长, 质控员]
+        severity_hint:
+          type: string
+          nullable: true
+        encounter_id:
+          type: string
+          nullable: true
+          description: 缺失时不猜不补，进入待补住院号清单
+    ReviewPayload:
+      type: object
+      required: [review_result, grade, remediation_plan, plan_deadline, evidence_refs, revision]
+      properties:
+        review_result:
+          type: string
+        grade:
+          type: string
+          enum: [Ⅰ级, Ⅱ级, Ⅲ级, Ⅳ级]
+          description: 分级枚举为配置项，经验推断 · 院内制度待核验
+        remediation_plan:
+          type: string
+        plan_deadline:
+          type: string
+          format: date-time
+        evidence_refs:
+          type: array
+          items:
+            type: string
+          description: 引文必须确实出现在上报叙述中
+        revision:
+          type: integer
+          description: 乐观并发版本号，冲突返回 409
+    ReviewResponse:
+      type: object
+      required: [receipt_id]
+      properties:
+        receipt_id:
+          type: string
+          description: 窗口、质控系统、导出台账三处一致

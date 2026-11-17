@@ -1,0 +1,98 @@
+/* 设计 token · CSS 变量镜像 src/ui/tokens.ts（不依赖系统深浅色主题） */
+:root {
+  --ndr-brand: #1F6FEB;
+  --ndr-brand-hover: #1A5FD0;
+  --ndr-brand-active: #164FB0;
+  --ndr-brand-soft: #EAF1FE;
+  --ndr-success: #1F9254;
+  --ndr-success-soft: #E8F6EE;
+  --ndr-todo: #B7791F;
+  --ndr-todo-soft: #FDF4E3;
+  --ndr-overdue: #C0392B;
+  --ndr-overdue-soft: #FCEDEB;
+  --ndr-fail: #C0392B;
+  --ndr-text: #1D2733;
+  --ndr-text-2: #5B6B7F;
+  --ndr-text-disabled: #A6B0BD;
+  --ndr-border: #E3E8F0;
+  --ndr-surface: #FFFFFF;
+  --ndr-canvas: #F4F6FA;
+  --ndr-nav: #14243A;
+  --ndr-neutral-1: #F8FAFC;
+  --ndr-neutral-2: #F1F4F8;
+  --ndr-neutral-3: #E8EDF4;
+  --ndr-neutral-4: #DCE3EC;
+  --ndr-space: 8px;
+  --ndr-radius: 6px;
+  --ndr-shadow: 0 1px 2px rgba(20, 36, 58, 0.06), 0 4px 12px rgba(20, 36, 58, 0.04);
+  --ndr-font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  --ndr-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono CJK SC", monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  font-family: var(--ndr-font);
+  font-size: 14px;
+  color: var(--ndr-text);
+  background: var(--ndr-canvas);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 { margin: 0; font-weight: 600; }
+.ndr-page-title { font-size: 20px; line-height: 28px; }
+.ndr-section-title { font-size: 16px; line-height: 24px; }
+.ndr-body { font-size: 14px; line-height: 22px; }
+.ndr-caption { font-size: 12px; line-height: 18px; color: var(--ndr-text-2); }
+
+/* 基础组件四态：hover / active / disabled / loading */
+.ndr-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 32px; padding: 0 16px; border: 1px solid var(--ndr-border);
+  border-radius: var(--ndr-radius); background: var(--ndr-surface);
+  color: var(--ndr-text); font-size: 14px; font-family: inherit;
+  cursor: pointer; transition: background .16s ease, border-color .16s ease, box-shadow .16s ease, transform .12s ease;
+}
+.ndr-btn--primary { background: var(--ndr-brand); border-color: var(--ndr-brand); color: #fff; }
+.ndr-btn.ndr-btn--hover:hover { background: var(--ndr-brand-hover); border-color: var(--ndr-brand-hover); color: #fff; }
+.ndr-btn.ndr-btn--active:active { background: var(--ndr-brand-active); border-color: var(--ndr-brand-active); transform: translateY(1px); }
+.ndr-btn:focus-visible { outline: 2px solid var(--ndr-brand); outline-offset: 2px; }
+.ndr-btn.ndr-btn--disabled, .ndr-btn:disabled {
+  background: var(--ndr-neutral-3); border-color: var(--ndr-neutral-3);
+  color: var(--ndr-text-disabled); cursor: not-allowed; box-shadow: none;
+}
+.ndr-btn.ndr-btn--loading {
+  background: var(--ndr-brand-soft); border-color: var(--ndr-brand);
+  color: var(--ndr-brand); cursor: progress;
+}
+.ndr-btn.ndr-btn--loading::before {
+  content: ""; width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid var(--ndr-brand); border-top-color: transparent;
+  animation: ndr-spin .8s linear infinite;
+}
+@keyframes ndr-spin { to { transform: rotate(360deg); } }
+
+.ndr-input, .ndr-select {
+  min-height: 32px; padding: 0 8px; border: 1px solid var(--ndr-border);
+  border-radius: var(--ndr-radius); background: var(--ndr-surface);
+  color: var(--ndr-text); font-size: 14px; font-family: inherit;
+}
+.ndr-input:hover, .ndr-select:hover { border-color: var(--ndr-brand); }
+.ndr-input:focus, .ndr-select:focus { outline: none; border-color: var(--ndr-brand); box-shadow: 0 0 0 2px var(--ndr-brand-soft); }
+.ndr-input:disabled { background: var(--ndr-neutral-2); color: var(--ndr-text-disabled); }
+
+.ndr-tag {
+  display: inline-flex; align-items: center; height: 22px; padding: 0 8px;
+  border-radius: 4px; font-size: 12px; white-space: nowrap;
+  background: var(--ndr-neutral-2); color: var(--ndr-text-2);
+}
+.ndr-tag--todo { background: var(--ndr-todo-soft); color: var(--ndr-todo); }
+.ndr-tag--overdue { background: var(--ndr-overdue-soft); color: var(--ndr-overdue); }
+.ndr-tag--success { background: var(--ndr-success-soft); color: var(--ndr-success); }
+.ndr-tag--brand { background: var(--ndr-brand-soft); color: var(--ndr-brand); }
+
+.ndr-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.ndr-table th, .ndr-table td { padding: 8px 12px; border-bottom: 1px solid var(--ndr-border); text-align: left; }
+.ndr-table th { color: var(--ndr-text-2); font-weight: 500; background: var(--ndr-neutral-1); }
+.ndr-table tr:hover td { background: var(--ndr-brand-soft); }
+.ndr-table tr:active td { background: var(--ndr-neutral-3); }
+.ndr-table .ndr-table--long { max-width: 320px; overflow-wrap: anywhere; word-break: break-all; font-family: var(--ndr-mono); }

@@ -1,0 +1,55 @@
+openapi: 3.1.0
+info:
+  title: 企业微信群机器人超期催办出站契约
+  version: 1.0.0
+  description: >-
+    每日 08:00 巡检产生的超期条目经此出站。webhook 地址取自 WECOM_WEBHOOK_URL。
+    去重键 = incident_id + 巡检批次号；单件单次，仅超期复查才允许重推。
+    消息体只含业务字段，患者可识别信息先经脱敏模块去除。
+servers:
+  - url: ${WECOM_WEBHOOK_URL}
+    description: 企业微信群机器人 webhook（环境变量 WECOM_WEBHOOK_URL）
+paths:
+  /:
+    post:
+      operationId: pushReminder
+      summary: 推送超期催办 markdown
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkdownMessage'
+      responses:
+        '200':
+          description: 推送成功
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [errcode, errmsg]
+                properties:
+                  errcode:
+                    type: integer
+                  errmsg:
+                    type: string
+        '4XX':
+          description: 请求错误（不可重试）
+        '5XX':
+          description: 服务端错误（可退避重试，失败不阻断主处置流程）
+components:
+  schemas:
+    MarkdownMessage:
+      type: object
+      required: [msgtype, markdown]
+      properties:
+        msgtype:
+          type: string
+          enum: [markdown]
+        markdown:
+          type: object
+          required: [content]
+          properties:
+            content:
+              type: string
+              description: 上报单号 / 病区 / 班次 / 停留时长 / 当前步，不含患者标识
